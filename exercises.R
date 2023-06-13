@@ -298,6 +298,41 @@ library(tidyverse)
         # Question 6
             # generally the points plotted on a continuous vs categorical graph
             # are grouped closer together making the graph easier to read.
+    # Section 11.5.2
+        # Question 1
+            # When we want to rescale a distribution to show distribution,
+            # it usually doesn't hurt to turn to proportions:
+            # cut within color
+            diamonds |> 
+              count(color, cut) |> 
+              group_by(color) |> 
+              mutate(prop = n / sum(n)) |> 
+              ggplot(aes(color, cut)) +
+              geom_tile(aes(fill = prop))
+            # color within cut (group by cut this time)
+            diamonds |> 
+              count(color, cut) |> 
+              group_by(cut) |> 
+              mutate(prop = n / sum(n)) |> 
+              ggplot(aes(color, cut)) +
+              geom_tile(aes(fill = prop))
+        # Question 2
+            # identity stat since we already have a count column.
+            ggplot(
+              diamonds |> count(color, cut), 
+              aes(x = color, y = n, fill = cut)
+            ) + 
+              geom_bar(stat = "identity")
+            # it is in general much easier to identify the distribution
+            # of cuts within each color and comparison of cuts across colors
+            # is also much easier. 
+        # Question 3
+            # TODO
+    # Section 11.5.3
+        # TODO
+    
+            
+      
             
             
               
