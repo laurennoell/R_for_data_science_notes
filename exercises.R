@@ -231,8 +231,76 @@ library(tidyverse)
                 sched_min = sched_dep_time %% 100,
                 sched_dep_time = sched_hour + (sched_min / 60)
               )
-            ggplot(df, aes(sched_dep_time, after_stat("density"))) + 
+            ggplot(df, aes(sched_dep_time, after_stat(density))) + 
               geom_freqpoly(aes(color = cancelled), binwidth = 1/4)
         # Question 2
+            # The relevant variables to discuss are: carat, cut, color and
+            # clarity. depth and table are measurements of the diamond that are 
+            # correlated with the weight of the diamond (i.e. carat).
+            # to explore carat-price, we do
+            ggplot(diamonds, aes(price, carat)) + geom_point()
+            # this graph is hard to look at because of the abundance of points
+            # we can try other geoms such as boxplot. Since carat and price
+            # are both continuous, we need to bin carat.
+            ggplot(diamonds, aes(carat, price)) +
+              geom_boxplot(aes(group = cut_width(carat, 0.1)))
+            # which shows a clear strong correlation with the two variables.
+            # To explore color-price, we need to keep in mind color is a
+            # categorical variable so something like a freqpoly geom would
+            # suffice here:
+            ggplot(diamonds, aes(price)) +
+              geom_freqpoly(aes(color = color))
+            # to see the relationship between color and price better (and not
+            # just count frequency, we use the trick mentioned in the chapter
+            # to have each line have an integral of one.)
+            ggplot(diamonds, aes(price, after_stat(density))) + 
+              geom_freqpoly(aes(color = color))
+            # It is still hard to see exactly which color has the highest
+            # average price, so we go to boxplots instead:
+            ggplot(diamonds, aes(color, price)) + geom_boxplot()
+            # because color is in reverse order (D is best, J is worst), we
+            # see there is a negative relationship, the worse the color the
+            # higher the price. 
+            # Let's do the same with clarity (also a categorical variable)
+            ggplot(diamonds, aes(clarity, price)) + geom_boxplot()
+            # recalling that worst = I1 -> IF = best, we see an almost positive
+            # correlation with S12 being the highest average price (very close
+            # to best) and IF/VVS1 being the worst. Still there are lots of
+            # outliers so the relationship isn't the best. (like color)
+            # Therefore, CARAT has the best correlation with price. To see
+            # the correlation with cut, we do:
+            ggplot(diamonds, aes(x = cut, y = carat)) + 
+              geom_boxplot()
+            # the relationship isn't quite significant. there is a slightly
+            # negative correlation with higher cuts generally being associated
+            # larger carats.
+        # Question 3
+            # no difference if we add a coord_flip layer.
+        # Question 4
+            ggplot(diamonds, aes(cut, price)) + geom_lv()
+            # the same information that is available with boxplot is available
+            # with level plot but level plot shows more. We see more quartiles
+            # with level plots compared to boxplots (only shows 4).
+        # Question 5
+            ggplot(diamonds, aes(cut, price)) + geom_violin()
+            ggplot(diamonds, aes(price)) + 
+              geom_histogram() + 
+              facet_wrap(~cut)
+            ggplot(diamonds, aes(price)) + geom_freqpoly(aes(color = cut))
+            ggplot(diamonds, aes(price)) + geom_density(aes(color = cut))
+            # geom_violin() is very good at describing the distribution of the
+            # points belonging to a categorical variable.
+            # faceted histogram is good for the same reasons except it also
+            # allows us to see count more clearly but harder to read overall
+            # freqpoly allows us to compare and contrast the peaks and valleys
+            # of each cut when they aren't very close to each other
+            # density is the same as freqpoly but easier to read. 
+        # Question 6
+            # generally the points plotted on a continuous vs categorical graph
+            # are grouped closer together making the graph easier to read.
+            
+            
+              
+            
             
         
